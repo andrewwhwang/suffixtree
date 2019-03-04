@@ -4,6 +4,7 @@ package suffixtree
 import (
 	"strings"
 	"unicode/utf8"
+	"fmt"
 )
 
 type generalizedSuffixTree struct {
@@ -281,4 +282,26 @@ func NewGeneralizedSuffixTree() *generalizedSuffixTree {
 	t.root = newNode()
 	t.activeLeaf = t.root
 	return t
+}
+
+func (t *generalizedSuffixTree) GetRoot() *node {
+	return t.root
+}
+
+func PrintNode(flag string, n *node) {
+	for _, e := range n.edges {
+		fmt.Printf("%s %s %v \n", flag, string(e.label), e.node.data)
+		PrintNode(flag+" -", e.node)
+	}
+}
+
+func (t *generalizedSuffixTree) GetReadsCh(n *node, s string, ch *chan string) {
+
+	if len(n.edges) > 0 {
+		for _, v := range n.edges{
+			t.GetReadsCh(v.node, s + string(v.label), ch)
+		}
+	} else {
+		*ch <- s
+	}
 }
