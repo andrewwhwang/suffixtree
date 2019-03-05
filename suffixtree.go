@@ -295,13 +295,13 @@ func PrintNode(flag string, n *node) {
 	}
 }
 
-func (t *generalizedSuffixTree) GetReadsCh(n *node, s string, ch *chan string) {
+func (t *generalizedSuffixTree) GetReadsCh(n *node, s string, ch chan string) {
 
 	if len(n.edges) > 0 {
 		for _, v := range n.edges{
 			t.GetReadsCh(v.node, s + string(v.label), ch)
 		}
 	} else {
-		*ch <- s
+		ch <- s
 	}
 }
